@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Scanner"><meta name="theme-color" content="#111111">
+<title>Scanner</title><link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-180.png"><link rel="icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="style.css"></head><body>
+<section id="home" class="screen">
+ <div class="bar"><h1>Scanner</h1><button id="openSettings" class="small">Settings</button></div>
+ <button id="newNb" class="big gold">+ New Collection</button>
+ <ul id="nbList"></ul>
+</section>
+<section id="notebook" class="screen hidden">
+ <div class="bar"><button id="backHome" class="small">‹ Back</button><h2 id="nbTitle"></h2><button id="delNb" class="small danger">Delete</button></div>
+ <label class="big gold filebtn">Scan / Take Photo<input id="camInput" type="file" accept="image/*" capture="environment" hidden></label>
+ <label class="big filebtn">Add from Photos<input id="libInput" type="file" accept="image/*" multiple hidden></label>
+ <div id="thumbs"></div>
+ <div class="actions"><button id="pdfBtn" class="big">Export PDF</button><button id="shareBtn" class="big">Share All</button><button id="uploadBtn" class="big">Upload to GitHub</button></div>
+ <p id="nbStatus" class="note"></p>
+</section>
+<section id="adjust" class="screen hidden">
+ <div class="bar"><button id="adjCancel" class="small">Cancel</button><h2 id="adjMsg">Adjust corners</h2><span></span></div>
+ <div id="adjWrap"><canvas id="adjCanvas"></canvas></div>
+ <div class="actions"><button id="adjOriginal" class="big">Use Original</button><button id="adjSave" class="big gold">Straighten &amp; Save</button></div>
+</section>
+<section id="view" class="screen hidden">
+ <div class="bar"><button id="viewBack" class="small">‹ Back</button><h2 id="viewTitle"></h2><button id="viewDel" class="small danger">Delete</button></div>
+ <img id="viewImg" alt="">
+ <div class="actions"><button id="viewDl" class="big">Download JPEG</button><button id="viewShare" class="big gold">Share</button></div>
+</section>
+<section id="settings" class="screen hidden">
+ <div class="bar"><button id="setBack" class="small">‹ Back</button><h2>GitHub Sync</h2><span></span></div>
+ <label>Fine-grained token<input id="setToken" type="password" autocomplete="off" placeholder="github_pat_…"></label>
+ <label>Repository<input id="setRepo" autocomplete="off" placeholder="divorceschmidtemails-a11y/scans"></label>
+ <p class="note">The token is saved only on this phone (localStorage). Uploads go to scans/&lt;collection&gt;/&lt;time&gt;.jpg.</p>
+ <button id="setSave" class="big gold">Save</button>
+</section>
+<div id="modal" class="hidden"><div class="box"><p id="modalMsg"></p><input id="modalInput" autocomplete="off"><div class="row"><button id="modalCancel" class="big">Cancel</button><button id="modalOk" class="big gold">OK</button></div></div></div>
+<script src="vendor/jspdf.umd.min.js"></script><script src="vendor/jscanify.js"></script>
+<script src="js/core.js"></script><script src="js/db.js"></script><script src="js/detect.js"></script><script src="js/detect-cv.js"></script>
+<script src="js/export.js"></script><script src="js/github.js"></script><script src="js/app.js"></script>
+</body></html>
