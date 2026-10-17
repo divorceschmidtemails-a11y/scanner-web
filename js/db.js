@@ -16,7 +16,7 @@
     async createNotebook(name) { const nb = { id: uid(), name, created: Date.now(), updated: Date.now(), pageCount: 0 };
       await tx(['notebooks'], 'readwrite', t => t.objectStore('notebooks').put(nb)); return nb; },
     getPages: nb => tx(['pages'], 'readonly', t => req(t.objectStore('pages').index('nb').getAll(nb))).then(a => a.sort((x, y) => x.order - y.order)),
-    async addPage(nbId, blob, thumb) { const p = { id: uid(), nb: nbId, order: Date.now() + Math.random(), created: Date.now(), blob, thumb };
+    async addPage(nbId, blob, thumb, created) { const p = { id: uid(), nb: nbId, order: Date.now() + Math.random(), created: created || Date.now(), blob, thumb };
       await tx(['pages', 'notebooks'], 'readwrite', async t => { t.objectStore('pages').put(p);
         const s = t.objectStore('notebooks'), nb = await req(s.get(nbId)); nb.pageCount++; nb.updated = Date.now(); s.put(nb); }); return p; },
     async deletePage(nbId, pageId) { await tx(['pages', 'notebooks'], 'readwrite', async t => { t.objectStore('pages').delete(pageId);

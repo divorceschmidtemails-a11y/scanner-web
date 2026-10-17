@@ -1,4 +1,4 @@
-const CACHE = 'scanner-web-v1';
+const CACHE = 'memora-v2';
 const FILES = ['./', 'index.html', 'style.css', 'manifest.json', 'js/app.js', 'js/core.js', 'js/db.js', 'js/detect.js', 'js/detect-cv.js', 'js/export.js', 'js/github.js',
   'vendor/jspdf.umd.min.js', 'vendor/jscanify.js', 'vendor/opencv.js', 'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png'];
 self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting())));

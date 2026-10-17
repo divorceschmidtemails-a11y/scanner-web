@@ -55,7 +55,8 @@
   // capture + corner adjust
   const cv = $('adjCanvas'), cx = cv.getContext('2d'); let src = null, corners = null, drag = -1, queue = [];
   async function onFiles(files) { queue = [...files]; next(); }
-  async function next() { const f = queue.shift(); if (!f) return openNotebook(current.id);
+  let capturedAt = 0;
+  async function next() { const f = queue.shift(); if (!f) return openNotebook(current.id); capturedAt = f.lastModified || Date.now();
     show('adjust'); $('adjMsg').textContent = 'Finding edges…';
     const bmp = await createImageBitmap(f, { imageOrientation: 'from-image' }), k = Math.min(1, 3000 / Math.max(bmp.width, bmp.height));
     src = document.createElement('canvas'); src.width = Math.round(bmp.width * k); src.height = Math.round(bmp.height * k);
@@ -74,9 +75,16 @@
   cv.addEventListener('pointerdown', e => { const [x, y] = pt(e); let best = 1e18; corners.forEach(([a, b], i) => { const dd = (a - x) ** 2 + (b - y) ** 2; if (dd < best) { best = dd; drag = i; } }); cv.setPointerCapture(e.pointerId); });
   cv.addEventListener('pointermove', e => { if (drag < 0) return; const [x, y] = pt(e); corners[drag] = [Math.max(0, Math.min(src.width, x)), Math.max(0, Math.min(src.height, y))]; draw(); });
   cv.addEventListener('pointerup', () => drag = -1); cv.addEventListener('pointercancel', () => drag = -1);
-  async function save(canvas) { const blob = await toBlob(canvas), tc = document.createElement('canvas'), ts = 240 / canvas.width;
+  function stamp(canvas, when) { const o = document.createElement('canvas'); o.width = canvas.width; o.height = canvas.height;
+    const g = o.getContext('2d'); g.drawImage(canvas, 0, 0);
+    const txt = 'Captured ' + new Date(when).toLocaleString([], { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', second: '2-digit', timeZoneName: 'short' });
+    const fs = Math.max(14, Math.round(o.width / 45)), pad = Math.round(fs * .5); g.font = `600 ${fs}px -apple-system, system-ui, sans-serif`;
+    const tw = g.measureText(txt).width, x = o.width - tw - pad * 3, y = o.height - fs - pad * 3;
+    g.fillStyle = 'rgba(0,0,0,.65)'; g.fillRect(x - pad, y - pad, tw + pad * 2, fs + pad * 2);
+    g.fillStyle = '#fff'; g.textBaseline = 'top'; g.fillText(txt, x, y); return o; }
+  async function save(raw) { const canvas = stamp(raw, capturedAt), blob = await toBlob(canvas), tc = document.createElement('canvas'), ts = 240 / canvas.width;
     tc.width = 240; tc.height = Math.max(1, Math.round(canvas.height * ts)); tc.getContext('2d').drawImage(canvas, 0, 0, tc.width, tc.height);
-    await DB.addPage(current.id, blob, await toBlob(tc, 0.7)); next(); }
+    await DB.addPage(current.id, blob, await toBlob(tc, 0.7), capturedAt); next(); }
   $('adjOriginal').onclick = () => save(src);
   $('adjSave').onclick = async () => { $('adjMsg').textContent = 'Straightening…'; await new Promise(r => setTimeout(r, 30));
     const w = Detect.warp(src.getContext('2d').getImageData(0, 0, src.width, src.height), C.orderCorners(corners), 2400, true), o = document.createElement('canvas');

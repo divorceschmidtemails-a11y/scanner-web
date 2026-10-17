@@ -1,4 +1,4 @@
-# Scanner (web app)
+# Memora (web app)
 
 A camera scanner that runs in Safari on iPhone — no App Store, no Apple developer account, nothing expires.
 Scan notebooks, loose paper, binders, printed pages, photos, or any object. Pages are straightened
@@ -22,12 +22,12 @@ or any static host.
 1. Open the app's URL in **Safari** (not Chrome).
 2. Tap the **Share** button (square with arrow).
 3. Scroll down, tap **Add to Home Screen**, then **Add**.
-4. Open **Scanner** from the home screen. It now runs full-screen like an app and works offline.
+4. Open **Memora** from the home screen. It now runs full-screen like an app and works offline.
 
 ## GitHub token setup (one time)
 1. On a computer, go to github.com → your avatar → **Settings → Developer settings →
    Personal access tokens → Fine-grained tokens → Generate new token**.
-2. Name it "Scanner", pick an expiration.
+2. Name it "Memora", pick an expiration.
 3. **Repository access → Only select repositories →** `divorceschmidtemails-a11y/scans`.
 4. **Permissions → Repository permissions → Contents → Read and write.** Nothing else.
 5. Generate and copy the token (`github_pat_…`).
